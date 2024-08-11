@@ -16,6 +16,19 @@ async function addMessage(userId, message) {
     }
 }
 
+async function obtainMessages() {
+    try {
+        const {rows} = await pool.query('SELECT * FROM messages JOIN users ON (messages.userid = users.id) ORDER BY time DESC', );
+        if (rows.length == 0) {
+            return [];
+        }
+        return rows
+    } catch(err) {
+        console.error("error finding messages", err);
+        return undefined;
+    }
+}
+
 async function obtainUserWithId(userId) {
     try {
         const {rows} = await pool.query('SELECT * FROM users WHERE id = $1', [userId]);
@@ -49,4 +62,5 @@ async function giveMemberPermission(userId) {
     }
 }
 
-module.exports = {giveMemberPermission, addUser, addMessage, obtainUserWithId, obtainUserWithUsername};
+
+module.exports = {obtainMessages, giveMemberPermission, addUser, addMessage, obtainUserWithId, obtainUserWithUsername};

@@ -2,11 +2,13 @@ const express = require('express')
 const {postSignUp, getSignUp} = require("../controlers/sign-up-controller");
 const {getLogIn, postLogIn} = require('../controlers/log-in-controller');
 const {getJoinTheClub, postJoinTheClub} = require('../controlers/join-the-club-controller');
+const {getMessages, postMessages} = require('../controlers/messages-controller');
 const passport = require("passport");
 
 const router = express.Router();
 
-router.get ('/', (req, res) => res.render('index'));
+router.get ('/', getMessages);
+router.post('/', postMessages);
 router.get ('/log-in', getLogIn);
 router.post('/log-in', postLogIn);
 router.get ('/sign-up', getSignUp);
