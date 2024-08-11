@@ -19,11 +19,11 @@ function postEndpoint(req, res, next) {
                 await addUser(req.body.username, hashedPassword)
                 res.redirect('/');
             } catch(err) {
-                return next(err)
+                next(err)
             }
         });
     } else {
-        return res.redirect(
+        res.redirect(
             '/sign-up?errors=' + encodeURIComponent(JSON.stringify(errors.array())) + 
             '&data=' + encodeURIComponent(JSON.stringify(req.body)));
     }

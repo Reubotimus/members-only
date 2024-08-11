@@ -7,6 +7,15 @@
 </head>
 <body>
     <h1>Messages</h1>
-    
+    <% if (locals.currentUser) { %>
+        <div class="user">
+            Welcome <%= locals.currentUser.username %>
+        </div>
+    <% } else { %>
+        <div class="links">
+            <a href="/log-in">log in</a>
+            <a href="/sign-up">sign up</a>
+        </div>
+    <% }%>
 </body>
 </html>
