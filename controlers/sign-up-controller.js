@@ -30,7 +30,7 @@ function postEndpoint(req, res, next) {
     res.redirect('/')
 }
 
-module.exports = [
+const postSignUp = [
     body('username', 'please enter a username').notEmpty(),
     body('username', 'sorry this username has already been taken')
         .custom(async username => {
@@ -53,3 +53,19 @@ module.exports = [
         .withMessage('passwords do not match'),
     postEndpoint
 ]
+
+
+function getSignUp(req, res) {
+    if (req.isAuthenticated()) {
+        res.redirect('/');
+    } else if (Object.keys(req.query).length == 0) {
+        res.render('sign-up', {errors: [], data: {}})
+    } else {
+        res.render('sign-up', {
+            errors: JSON.parse(decodeURIComponent(req.query.errors)), 
+            data: JSON.parse(decodeURIComponent(req.query.data))
+        });
+    }
+}
+
+module.exports = {postSignUp, getSignUp}

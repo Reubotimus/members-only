@@ -5,15 +5,14 @@ const passport = require("passport");
 const LocalStrategy = require('passport-local').Strategy;
 const {obtainUserWithUsername, obtainUserWithId} = require('./db/requests')
 const bcrypt = require('bcryptjs');
-
-const post_sign_up = require("./controlers/sign-up-controller");
+const indexRouter = require('./routers/indexRouter');
 
 const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(session({ secret: "cats", resave: false, saveUninitialized: false }));
+app.use(session({ secret: "cats", resave: false, saveUninitialized: false, cookie: {maxAge: 3600000 * 24}}));
 app.use(passport.session());
 passport.use(new LocalStrategy(async (username, password, done) => {
         try {
@@ -58,41 +57,8 @@ app.use((req, res, next) => {
     res.locals.currentUser = req.user;
     next();
 });
+app.use('/', indexRouter);
 
-
-
-app.get('/', (req, res) => res.render('index'));
-app.get('/log-in', (req, res) => {
-    if (req.isAuthenticated()) {
-        res.redirect('/')
-    } else {
-        res.render('log-in')
-    }
-});
-app.get('/sign-up', (req, res) => {
-    if (req.isAuthenticated()) {
-        res.redirect('/');
-    } else if (Object.keys(req.query).length == 0) {
-        res.render('sign-up', {errors: [], data: {}})
-    } else {
-        res.render('sign-up', {
-            errors: JSON.parse(decodeURIComponent(req.query.errors)), 
-            data: JSON.parse(decodeURIComponent(req.query.data))
-        });
-    }
-});
-
-app.post('/sign-up', post_sign_up);
-app.post('/log-in', (req, res, next) => {
-    passport.authenticate('local', (err, user, info) => {
-        if (err) return next(err);
-        if (!user) return res.redirect('/log-in');
-        req.logIn(user, (err) => {
-            if (err) return next(err);
-            return res.redirect('/');
-        });
-    })(req, res, next);
-});
 
 
 const PORT = process.env.PORT || 3000;

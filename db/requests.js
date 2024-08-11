@@ -41,4 +41,12 @@ async function obtainUserWithUsername(username) {
     }
 }
 
-module.exports = {addUser, addMessage, obtainUserWithId, obtainUserWithUsername};
+async function giveMemberPermission(userId) {
+    try {
+        await pool.query('UPDATE users SET member = TRUE WHERE id = $1', [userId]);
+    } catch(err) {
+        console.error("error giving user member permission", err);
+    }
+}
+
+module.exports = {giveMemberPermission, addUser, addMessage, obtainUserWithId, obtainUserWithUsername};
