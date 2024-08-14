@@ -18,5 +18,12 @@ function postLogIn(req, res, next) {
     }) (req, res)
 }
 
+function logOut(req, res, next) {
+    req.logout(function(err) {
+        if (err) { return next(err); }
+        res.redirect('/');
+    });
+}
 
-module.exports = {getLogIn, postLogIn}
+
+module.exports = {getLogIn, postLogIn, logOut}

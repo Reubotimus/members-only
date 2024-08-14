@@ -14,12 +14,14 @@ function postEndpoint(req, res, next) {
         bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
             // if err, do something
             if (err) {next(err);}
-            // otherwise, store hashedPassword in DB
-            try {
-                await addUser(req.body.username, hashedPassword)
-                res.redirect('/');
-            } catch(err) {
-                next(err)
+            else {
+                // otherwise, store hashedPassword in DB
+                try {
+                    await addUser(req.body.username, hashedPassword)
+                    res.redirect('/');
+                } catch(err) {
+                    next(err)
+                }
             }
         });
     } else {
@@ -27,7 +29,6 @@ function postEndpoint(req, res, next) {
             '/sign-up?errors=' + encodeURIComponent(JSON.stringify(errors.array())) + 
             '&data=' + encodeURIComponent(JSON.stringify(req.body)));
     }
-    res.redirect('/')
 }
 
 const postSignUp = [

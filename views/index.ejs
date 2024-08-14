@@ -4,23 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Messages</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h1>Messages</h1>
     <% if (locals.currentUser) { %>
         <div class="user">
-            Welcome <%= locals.currentUser.username %>
+            Welcome <%= locals.currentUser.username %> <a href="/log-out">log out</a> 
         </div>
         <% if (!locals.currentUser.member) { %>
             <div class="join-up-message">
                 <a href="/join-the-club">Join the club</a>
-                to write messages!
+                to write messages, and see usernames!
             </div>
         <% } %>
     <% } else { %>
         <div class="links">
             <a href="/log-in">log in</a>
             <a href="/sign-up">sign up</a>
+        </div>
+        <div class="join-up-message">
+            Sign up, then join the club to write messages and see usernames!
         </div>
     <% }%>
 
@@ -37,6 +41,20 @@
             <div class="message-body">
                 <%= message.message %>
             </div>
+            <% if (locals.currentUser && locals.currentUser.member) { %>
+                <div class="message-date">
+                    <%= message.time.toLocaleString('en-GB', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                    }) %>
+                </div>
+                <div class="message-username">
+                    <%= message.username %>
+                </div>
+            <% } %>
         </div>
     <% }) %>
 
